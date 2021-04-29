@@ -28,7 +28,7 @@ CONFIG.read(os.path.join(BASE_DIR, "config.ini"))
 SECRET_KEY = CONFIG.get("Django", "Secret")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -37,8 +37,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'easybidofficial@gmail.com'
-EMAIL_HOST_PASSWORD = 'easybid2021'
+EMAIL_HOST_USER = CONFIG.get("Email", "Key")
+EMAIL_HOST_PASSWORD = CONFIG.get("Email", "Secret")
 
 # Application definition
 
