@@ -1,0 +1,38 @@
+{% extends "easybid/navigation.html" %}
+
+{% block content %}
+    <form method="POST" id ="register_form">
+        {% csrf_token %}
+        <span class="h3 mb-3 font-weight-normal" id = "id_page_name">Login</span>
+        <table>
+            <tr></tr>
+            {{ form.as_table }}
+            <tr></tr>
+        </table>
+        <button class="btn btn-secondary btn" id = "id_login_button" type="submit" value="Submit" >Login</button>
+        <div class="row" style="margin: auto; margin-top: 0.5em;">
+            <div style="margin: auto;">OR</div>
+            <div style="margin: auto; margin-top: 0.5em;">
+                <a class="btn btn-outline-secondary btn" href="{% url 'social:begin' 'google-oauth2' %}?next=/" role="button" style="text-transform:none">
+                    <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
+                    Login with Google
+                </a>
+                </div>
+        </div>
+            
+    </form>
+    
+
+{% endblock %}
+
+  
+{% block script %} 
+<link   rel="stylesheet" 
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
+        crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" 
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" 
+        crossorigin="anonymous">
+</script>
+{% endblock %}

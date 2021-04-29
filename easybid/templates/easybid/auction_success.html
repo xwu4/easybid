@@ -1,0 +1,12 @@
+{% extends "easybid/navigation.html" %}
+
+{% block content %}
+    <div id = "page_header">
+        <span>{{message}}</span>
+        {% if item %}
+        <div style="font-size: 30px;"><a href="{% url 'view_item_detail' item.id %}"><u>Click to view your auction</u></a></div>
+        {% else %}
+        <div style="font-size: 30px;"><a href="{% url 'home'%}"><u>Click to return to homepage</u></a></div>
+        {% endif %}
+    </div>
+{% endblock %}

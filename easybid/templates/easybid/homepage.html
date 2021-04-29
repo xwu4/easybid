@@ -1,0 +1,64 @@
+{% extends "easybid/navigation.html" %}
+
+{% block content %}
+<section class="jumbotron text-center">
+  <div class="container">
+    <h1 class="jumbotron-heading" style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
+      {% if page_name %}
+      {{page_name}}
+      {% else %}
+      Auction Items
+      {% endif %}
+    </h1>
+  </div>
+</section>
+
+<span id = "auction_count" hidden>{{id_list}}</span>
+<div class="album py-5 bg-light" style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
+  <div class="container">
+    <div class="row">
+      {% for item in auction_items %}
+      <div class="col-md-4">
+        <div class="card mb-4 box-shadow">
+          {%if item.product_image %}
+          <img class="card-img-top" src="{{item.product_image.url}}" alt="product image">
+          {% else %}
+          <img class="card-img-top" src="/static/easybid/default_img/default_item_img.png" alt="product image">
+          {% endif %}
+          <div class="card-body">
+            <h5 class="card-text">{{item.product_name}}</h5>
+            <p id="start_time_{{item.id}}" hidden>Start: {{item.start_time|date:"n/j/Y g:i A"}}</p>
+            <p id="end_time_{{item.id}}" hidden>End: {{item.end_time|date:"n/j/Y g:i A"}}</p>
+            <p class="card-text" id="countdown_{{item.id}}"></p>
+            <div class="d-flex justify-content-between align-items-center">
+              <a href="{% url 'view_item_detail' item.id %}">
+                <button type="button" class="btn btn-sm btn-outline-secondary">View details</button>
+              </a>
+              <!-- <a href="{% url 'room' item.id %}">
+                <button type="button" class="btn btn-sm btn-outline-primary">test</button>
+              </a> -->
+              {%if item.bid_count == 1 %}
+              <small class="text-muted">{{item.bid_count}} bid</small>
+              {% else %}
+              <small class="text-muted">{{item.bid_count}} bids</small>
+              {% endif %}
+            </div>
+          </div>
+          <div class="card-footer">
+            {% if item.highest_bid %}
+            <small class="text-muted">Current: ${{item.highest_bid.price}}</small>
+            {% else %}
+            <small class="text-muted">Current: ${{item.starting_price}}</small>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript" src="../../static/easybid/countdown_homepage.js"></script>
+{% endblock %}

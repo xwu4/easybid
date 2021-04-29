@@ -1,0 +1,203 @@
+{% extends "easybid/navigation.html" %}
+
+{% block content %}
+
+
+<div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative" style="margin-top:50px">
+
+    <div class="picture-container">
+        <div class="item-picture">
+            <div class="col-auto d-none d-lg-block">
+                {% if item.product_image %}
+                <img src="{{item.product_image.url}}" alt="product image" style="width:100%">
+                {% else %}
+                <img src="/static/easybid/default_img/default_item_img.png" alt="product image" style="width:100%">
+                {% endif %}
+            </div>        
+        </div>
+    </div>
+
+    <div class="col p-4 d-flex flex-column position-static">
+        <strong class="d-inline-block mb-2 text-primary">Auction Item 
+            {% if request.user == item.seller %}
+            <span><button id = "edit_button" type="submit" class="btn btn-outline-primary btn-sm" style="position: absolute; right: 6em;" disabled><a style="text-decoration:none" href="{% url 'edit_auction' item.id %}">Edit</a></button></span>
+            <form style = "display: inline; " action="{% url 'delete_auction' item.id %}" method = "POST">{% csrf_token %}<span><button id = "delete_button" type="submit" class="btn btn-outline-danger btn-sm" style="position: absolute; right: 1em;" disabled><a style="text-decoration:none; color:red">Delete</a></button></span></form>
+            {% endif %}
+        </strong>
+        <h3 class="mb-0" class="product-header">{{item.product_name}}</h3>
+        <p id="start_time" hidden>Start: {{item.start_time|date:"n/j/Y g:i A"}}</p>
+        <p id="end_time" hidden>End: {{item.end_time|date:"n/j/Y g:i A"}}</p>
+        <div class="mb-1 text-muted">
+            <div id="countdown"></div>
+        </div>
+        
+        <div class="mb-1 text-muted">
+            <div class="product-bid">
+                Current bid: US
+                {% if item.highest_bid %}
+                    $<span id = "highest_bid">{{item.highest_bid.price}}</span> highest bid (<span id = "highest_bidder">{{item.highest_bid.bidder.username}}</span>)
+                {% else %}
+                    $<span id="highest_bid">{{item.starting_price}}</span>(starting price)
+                {% endif %}
+         
+            </div>
+        </div>
+
+        <div class="mb-1 text-muted">
+            <div class="product-bid-number">
+                Number of bids:
+                {% if item.bid_count == 1 %}
+                 <span id="bid_count">{{item.bid_count}}</span> Bid
+                {% else %}
+                 <span id="bid_count">{{item.bid_count}}</span> Bids
+                {% endif %}
+            </div>
+        </div> 
+
+        <div class="mb-1 text-muted">
+            <div class="value">
+                Value: ${{item.product_value}}
+            </div>
+        </div>
+
+        <div class="mb-1 text-muted">
+            <div class="seller">
+                <a href="{% url 'view_other_profile' item.seller.id %}">Seller: {{item.seller.first_name}} {{item.seller.last_name}}</a>
+            </div>
+        <br>
+        </div>
+        
+        {% if item.is_expired %}
+            {% if request.user == item.seller %}
+            <form enctype="multipart/form-data" method="POST" action="{%url 'notify_winner' item.id %}">
+                {% csrf_token %}
+                <div class="mb-1 text-muted">
+                    Send notification to the winner for payment.
+                </div>
+                <a href="{% url 'notify_winner' item.id %}">
+                    <button type="submit" class="btn btn-lg btn-block btn-primary">
+                        Send Email
+                    </button>
+                </a>
+            </form>
+            {% elif request.user == item.highest_bid.bidder %}
+            <div class="mb-1 text-muted">
+                You have won the auction, please finish the payment!
+            </div>
+            
+            <a href="{% url 'paypal' item.id %}">
+                <button type="submit" class="btn btn-lg btn-block btn-primary">
+                    Pay
+                </button>
+            </a>
+            {% else %}
+            <div class="mb-1 text-muted">
+                This auction is expired.
+            </div>
+            {% endif %}
+        {% else %}
+        <form enctype="multipart/form-data" method="POST" action="{%url 'update_bid_price' item.id %}">
+            {% csrf_token %}
+                <div class="place-bid">
+                        <div class="mb-1 text-muted">
+                            {% if request.user == item.seller%}
+                            You cannot bid on the item you post!
+                            {% else %}
+                            <label for="bid-price-label" class="form-label">
+                                {#TODO Sum up for the minimum price for bid#}
+                                Enter a bid price larger than 
+                                $<span id = "min_bid_price">{{item.next_price|floatformat:2}}</span>
+                            </label>
+                            {% endif %}
+                        </div>
+                        <input id = "bid_input" name="bid_price" type="number" step="0.01" class="form-control" id="bid-price" min = "{{item.next_price|floatformat:2}}" placeholder="" value="" required="">
+                        <div class="invalid-feedback">
+                        Please enter a valid price.
+                        </div>
+                </div>
+                {% if user.is_authenticated %}
+                    {% if request.user == item.seller or item.is_expired %}
+                    <button type="submit" class="btn btn-lg btn-block btn-primary" disabled>Place Bid</button>
+                    {% else %}
+                    <button type="submit" class="btn btn-lg btn-block btn-primary" id="bid_button">Place Bid</button>
+                    {% endif %}
+                {% else %}
+                    <button type="submit" class="btn btn-lg btn-block btn-danger" disabled>Please login</button>
+                {% endif %}
+            </form>
+        {% endif %}
+
+
+  </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        Product Description
+    </div>
+    <div class="card-body">
+      <blockquote class="blockquote mb-0">
+        <p>
+            {% if item.product_description %}
+            {{item.product_description}}
+            {% else %}
+            This guy is lazy and left no description.
+            {% endif %}
+        </p>
+      </blockquote>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+{{ request.user.username|json_script:"username" }}
+{{ item.id|json_script:"item_id" }}
+{{ item.min_bid_increment|json_script:"min_bid_increment" }}
+<script type="text/javascript" src="../../static/easybid/countdown_itempage.js"></script>
+{{ room_name|json_script:"room-name" }}
+    <script>
+        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+        const username = JSON.parse(document.getElementById('username').textContent);
+        const id = JSON.parse(document.getElementById('item_id').textContent);
+        const min_bid_increment = JSON.parse(document.getElementById('min_bid_increment').textContent);
+
+        const chatSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/chat/'
+            + roomName
+            + '/'
+        );
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            document.querySelector('#highest_bid').innerHTML = Number(data.message).toFixed(2);
+            var bidder = document.getElementById("highest_bidder");
+            if(bidder) document.querySelector('#highest_bidder').innerHTML = data.username;
+            document.querySelector('#min_bid_price').innerHTML = (Number(data.message)+Number(min_bid_increment)).toFixed(2);
+            document.querySelector('#bid_count').innerHTML = Number(document.querySelector('#bid_count').innerHTML)+Number(1);
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#bid_input').focus();
+        document.querySelector('#bid_input').onkeyup = function(e) {
+            if (e.keyCode === 13) {  // enter, return
+                document.querySelector('#bid_button').click();
+            }
+        };
+ 
+        document.querySelector('#bid_button').onclick = function(e) {
+            const messageInputDom = document.querySelector('#bid_input');
+            const message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'message': message,
+                'id': id,
+                'username':username,
+            }));
+        };
+    </script>
+{% endblock %}

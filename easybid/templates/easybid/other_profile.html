@@ -1,0 +1,86 @@
+{% extends "easybid/navigation.html" %}
+
+{% block content %}
+    <div id = "page_header">
+        <span>{{owner.first_name}} {{owner.last_name}}'s Profile</span>
+    </div>
+
+    <div class="container emp-profile">
+        <form enctype="multipart/form-data" method="POST" action="{%url 'update_profile' %}">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="profile-img">
+                        {% if profile_picture %}
+                        <img class="img-fluid" src="{% url 'profile_picture' owner.username %}" id="id_user_picture" alt="Profile Picture">  
+                        {% else %}
+                        <img class="img-fluid" src="/static/easybid/default_img/default_user_img.png" id="id_user_picture" alt="Profile Picture">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="profile-head">
+                        <h5>
+                            {{owner.first_name}} {{owner.last_name}}
+                        </h5>
+                        <h6>
+                            <textarea name = "bio_text" rows="7" cols="50" class="form-control" id="id_bio_input_text" placeholder="Too lazy to introduce..." readonly>{{bio_text}}</textarea>
+                        </h6>
+                    </div>
+                </div>
+            </div>
+        </form> 
+        <br>
+        <div class="row">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#offers" type="button" role="tab" aria-controls="offers" aria-selected="true">Offers</button>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="offers" role="tabpanel" aria-labelledby="offers-tab">
+                        <div class="container marketing">
+                            <div class="row">
+                                {%if not auction_items%}
+                                    <h5 id = "no_item">Currently no offer is provided.</h5>
+                                {% endif %}
+                                {% for auction in auction_items%}
+                                    <div class="col-lg-4" style="margin-top: 1vh; text-align: center; font-size: 15px;">
+                                        {% if auction.product_image %}
+                                        <img class="img-fluid" style = "border-radius: 1.5em; max-height: 15em; max-width: 15vw;" src="{{auction.product_image.url}}" alt="product_image" style="margin: auto;">
+                                        {% else %}
+                                        <img class="img-fluid" style = "border-radius: 1.5em; max-height: 15em; max-width: 15vw;" src="/static/easybid/default_img/default_item_img.png" alt="product_image" style="margin: auto;">
+                                        {% endif %}
+                                        <h5 style="margin-top: 0.5em;"> {{auction.product_name}}</h5>
+                                        <p>Start: {{auction.start_time|date:"n/j/Y g:i A"}}</p>
+                                        <p>End: {{auction.end_time|date:"n/j/Y g:i A"}}</p>
+                                        {% if auction.is_expired %}
+                                            <p><a class="btn btn-secondary btn-sm" href="{% url 'view_item_detail' auction.id %}"> Expired &raquo;</a></p>
+                                        {% else %}
+                                            {% if auction.is_started %}
+                                            <p><a class="btn btn-warning btn-sm" href="{% url 'view_item_detail' auction.id %}">Pending &raquo;</a></p>
+                                            {% else %}
+                                            <p><a class="btn btn-info btn-sm" href="{% url 'view_item_detail' auction.id %}">Upcoming &raquo;</a></p>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div><!-- /.col-lg-4 -->
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>          
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block script %} 
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../static/easybid/profile_picture_upload.js"></script>
+{% endblock %}

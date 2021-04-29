@@ -1,0 +1,139 @@
+{% extends "easybid/navigation.html" %}
+
+{% block content %}
+    <div id = "page_header">
+        <span>My Profile</span>
+        <div style="font-size: 15px;">{{edit_error}}</div>
+    </div>
+
+    <div class="container emp-profile">
+        <form enctype="multipart/form-data" method="POST" action="{%url 'update_profile' %}">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="profile-img">
+                        {% if profile_picture %}
+                        <img class="img-fluid" src="{% url 'profile_picture' user.username %}" id="id_user_picture" alt="Profile Picture">  
+                        {% else %}
+                        <img class="img-fluid" src="/static/easybid/default_img/default_user_img.png" id="id_user_picture" alt="Profile Picture">
+                        {% endif %}
+                        <label for="id_user_picture" class="file btn btn-lg btn-primary">
+                            Choose Photo
+                        {{form.profile_picture}}
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="profile-head">
+                        <h5>
+                           {{user.first_name}} {{user.last_name}}
+                        </h5>
+                        <h5>
+                            Username: {{user.username}} 
+                         </h5>
+                        <h6>
+                            <textarea name = "bio_text" rows="7" cols="50" class="form-control" id="id_bio_input_text" placeholder="Want to introduce yourself?">{{bio_text}}</textarea>
+                        </h6>
+                    </div>
+                </div>
+                {% for field in form.hidden_fields %}
+                    {{field}} {{field.errors}}
+                {% endfor %}
+                <div class="col-md-2">
+                    <input type="submit" class="profile-edit-btn" name="btnAddMore" value="Update Profile"/>
+                </div>
+            </div>
+        </form> 
+        <div class="row">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#offers" type="button" role="tab" aria-controls="offers" aria-selected="true">Offers</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#bidding" type="button" role="tab" aria-controls="bidding" aria-selected="false">Bidding</button>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="offers" role="tabpanel" aria-labelledby="offers-tab">
+                        <div class="container marketing">
+                            <div class="row">
+                                {%if not auction_items%}
+                                    <h5 id = "no_item">You don't have any offers now.</h5>
+                                {% endif %}
+                                {% for auction in auction_items%}
+                                    <div class="col-lg-4" style="margin-top: 1vh; text-align: center; font-size: 15px;">
+                                        {% if auction.product_image %}
+                                        <img class="img-fluid" style = "border-radius: 1.5em; max-height: 15vh; max-width: 15vw;" src="{{auction.product_image.url}}" alt="product_image" style="margin: auto;">
+                                        {% else %}
+                                        <img class="img-fluid" style = "border-radius: 1.5em; max-height: 15vh; max-width: 15vw;" src="/static/easybid/default_img/default_item_img.png" alt="product_image" style="margin: auto;">
+                                        {% endif %}
+                                        <h5 style="margin-top: 0.5em;">{{auction.product_name}}</h5>
+                                        <p>Start: {{auction.start_time|date:"n/j/Y g:i A"}}</p>
+                                        <p>End: {{auction.end_time|date:"n/j/Y g:i A"}}</p>
+                                        {% if auction.is_expired %}
+                                            {% if auction.bid_count == 0 %}
+                                            <p><a class="btn btn-secondary btn-sm" href="{% url 'view_item_detail' auction.id %}">No winner &raquo;</a></p>
+                                            {% else %}
+                                            <p><a class="btn btn-success btn-sm" href="{% url 'view_item_detail' auction.id %}">Final price: ${{auction.highest_bid.price|floatformat:2}} &raquo;</a></p>
+                                            {% endif %}
+                                        {% else %}
+                                            {% if auction.is_started %}
+                                            <p><a class="btn btn-warning btn-sm" href="{% url 'view_item_detail' auction.id %}">Pending &raquo;</a></p>
+                                            {% else %}
+                                            <p><a class="btn btn-info btn-sm" href="{% url 'view_item_detail' auction.id %}">Hasn't Started &raquo;</a></p>
+                                            {% endif %}
+                                        {% endif %}
+                                        
+                                        <!-- <p><a class="btn btn-secondary btn-sm" href="{% url 'view_item_detail' auction.id %}">View details &raquo;</a></p>  -->
+                                    </div><!-- /.col-lg-4 -->
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="bidding" role="tabpanel" aria-labelledby="bidding-tab">
+                        <div class="container marketing">
+                            <div class="row">
+                                {%if not bid_items%}
+                                    <h5 id = "no_item">You're not bidding on any items.</h5>
+                                {% endif %}
+                                {% for bid_item in bid_items%}
+                                    <div class="col-lg-4" style="margin-top: 1vh; text-align: center;">
+                                        {% if bid_item.product_image %}
+                                        <img class="img-fluid" style="border-radius: 1.5em; max-height: 15vh; max-width: 15vw;" src="{{bid_item.product_image.url}}" alt="product_image" style="margin: auto;">
+                                        {% else %}
+                                        <img class="img-fluid" style ="border-radius: 1.5em; max-height: 15vh; max-width: 15vw;" src="/static/easybid/default_img/default_item_img.png" alt="product_image" style="margin: auto;">
+                                        {% endif %}      
+                                        <h5 style="margin-top: 0.5em;">{{bid_item.product_name}}</h5>
+                                        <p>Start: {{bid_item.start_time|date:"n/j/Y g:i A"}}</p>
+                                        <p>End: {{bid_item.end_time|date:"n/j/Y g:i A"}}</p>
+                                        {% if bid_item.is_expired%}
+                                            {% if bid_item.highest_bid.bidder == user%}
+                                            <p><a class="btn btn-success btn-sm" href="{% url 'view_item_detail' bid_item.id %}">Won for ${{bid_item.highest_bid.price|floatformat:2}} &raquo;</a></p>
+                                            {% else %}
+                                            <p><a class="btn btn-danger btn-sm" href="{% url 'view_item_detail' bid_item.id %}">Lost &raquo;</a></p>
+                                            {% endif %}
+                                        {% else %}
+                                        <p><a class="btn btn-warning btn-sm" href="{% url 'view_item_detail' bid_item.id %}">Pending &raquo;</a></p>
+                                        {% endif %}
+                                        <!-- <p><a class="btn btn-secondary btn-sm" href="{% url 'view_item_detail' bid_item.id %}">View details &raquo;</a></p> -->
+                                    </div><!-- /.col-lg-4 -->
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>          
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block script %} 
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../static/easybid/profile_picture_upload.js"></script>
+{% endblock %}

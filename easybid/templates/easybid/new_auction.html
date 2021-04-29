@@ -1,0 +1,70 @@
+{% extends "easybid/navigation.html" %}
+
+{% block content %}
+<div id = "page_header">
+    <span>Create Auction</span>
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+        {{error}}
+    </div>
+    {% endif %}
+</div>
+
+<form enctype="multipart/form-data" method="POST" class="row g-3" id="auction_form" action="{%url 'create_auction' %}">
+    {% csrf_token %}
+    <div class="col-md-6">
+      <label for="product_name" class="form-label">Title:</label>
+      <input name="product_name" class="form-control" id="product_name" value = "{{product_name}}"required>
+    </div>
+    <div class="col-md-6">
+      <label for="product_value" class="form-label">Product Value:</label>
+      <input name="product_value" type="number" min="0" step="0.01" class="form-control" id="product_value" value = "{{product_value}}" required>
+    </div>
+    <div class="col-md-6">
+      <label for="starting_price" class="form-label">Starting Price:</label>
+      <input name="starting_price" type="number" min="0" step="0.01" class="form-control" id="starting_price" value = "{{starting_price}}" required>
+    </div>
+    <div class="col-md-6">
+        <label for="min_bid_increment" class="form-label">Minimum Bid Increment:</label>
+        <input name="min_bid_increment" type="number" min="1" step="0.01" class="form-control" id="min_bid_increment" value="{{min_bid_increment}}" required>
+    </div>
+    <div class="col-md-6">
+        <label for="start_time" class="form-label">Start Time:</label>
+        <input id="start_time" name="start_time" type="text" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#datetimepicker5" value = "{{start_time}}" required/>
+    </div>
+    <div class="col-md-6">
+        <label for="end_time" class="form-label">End Time:</label>
+        <input id="end_time" name="end_time" type="text" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#datetimepicker5" value = "{{end_time}}" required/>
+    </div>
+    <div class="col-md-6">
+        <div class="product-img">
+            <img class="img-fluid" src="/static/easybid/default_img/default_item_img.png" id="product_image" alt="Product Image">
+            <label for="product_image" class="file btn btn-lg btn-primary">
+                Product Image Upload
+            {{form.product_image}}
+            <div class="error">
+                {% for error in form.product_image.errors %} {{error}} {% endfor %}
+            </div>
+            </label>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <label for="product_description" class="form-label">Product description:</label>
+        <textarea name="product_description" rows="12" cols="40" class="form-control" id="id_bio_input_text" placeholder="Please describe your product...">{{product_description}}</textarea>
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-secondary btn">Submit</button>
+    </div>
+</form>
+
+{% endblock %}
+
+
+{% block script %}
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.0/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js" integrity="sha512-k6/Bkb8Fxf/c1Tkyl39yJwcOZ1P4cRrJu77p83zJjN2Z55prbFHxPs9vN7q3l3+tSMGPDdoH51AEU8Vgo1cgAA==" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/css/tempusdominus-bootstrap-4.min.css" integrity="sha512-3JRrEUwaCkFUBLK1N8HehwQgu8e23jTH4np5NHOmQOobuC4ROQxFwFgBLTnhcnQRMs84muMh0PnnwXlPq5MGjg==" crossorigin="anonymous" />
+<script type="text/javascript" src="../../static/easybid/new_auction.js"></script>
+{% endblock %}
