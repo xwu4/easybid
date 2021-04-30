@@ -4,6 +4,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, Http404
 
 from django.views.decorators.csrf import csrf_exempt
+import os
+import django
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "webapps.settings")
+django.setup()
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
