@@ -51,10 +51,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'background_task',
+    'chat',
     'social_django',
     'easybid',
     'channels',
-    'chat',
 ]
 
 MIDDLEWARE = [
@@ -116,7 +116,7 @@ SOCIAL_AUTH_PIPELINE = (
 )
 
 WSGI_APPLICATION = 'webapps.wsgi.application'
-ASGI_APPLICATION = 'routing.application'
+ASGI_APPLICATION = 'webapps.routing.application'
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
