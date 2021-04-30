@@ -1,0 +1,1 @@
+web: gunicorn easybid.wsgi:application --log-file -
