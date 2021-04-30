@@ -45,6 +45,7 @@ EMAIL_HOST_PASSWORD = CONFIG.get("Email", "Secret")
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -55,7 +56,6 @@ INSTALLED_APPS = [
     'chat',
     'social_django',
     'easybid',
-    'channels',
 ]
 
 MIDDLEWARE = [
