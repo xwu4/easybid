@@ -15,7 +15,6 @@ import os
 from configparser import ConfigParser
 from urllib.parse import urlparse
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", __file__)
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -27,10 +26,10 @@ CONFIG.read(os.path.join(BASE_DIR, "config.ini"))
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = CONFIG.get("Django", "Secret")
+SECRET_KEY=CONFIG.get("Django", "Secret")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG=True
 
 ALLOWED_HOSTS = ['easybid-cmu.herokuapp.com', '127.0.0.1:8000']
 

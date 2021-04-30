@@ -15,17 +15,17 @@ from django.core.asgi import get_asgi_application
 import chat.routing
 import django
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'webapps.settings')
-
-application = ProtocolTypeRouter({
-    "http": get_default_application(),
-    "websocket": AuthMiddlewareStack(
-        URLRouter(
-            chat.routing.websocket_urlpatterns
-        )
-    ),
-})
-
 # os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'webapps.settings')
-# django.setup()
-# application = get_default_application()
+
+# application = ProtocolTypeRouter({
+#     "http": get_default_application(),
+#     "websocket": AuthMiddlewareStack(
+#         URLRouter(
+#             chat.routing.websocket_urlpatterns
+#         )
+#     ),
+# })
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'webapps.settings')
+django.setup()
+application = get_default_application()
