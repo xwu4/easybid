@@ -31,7 +31,7 @@ SECRET_KEY=CONFIG.get("Django", "Secret")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG=True
 
-ALLOWED_HOSTS = ['easybid-cmu.herokuapp.com', '127.0.0.1:8000']
+ALLOWED_HOSTS = ['easybid-cmu.herokuapp.com', '127.0.0.1']
 
 # Email setup settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
