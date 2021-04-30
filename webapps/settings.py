@@ -28,9 +28,9 @@ CONFIG.read(os.path.join(BASE_DIR, "config.ini"))
 SECRET_KEY = CONFIG.get("Django", "Secret")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['easybid-cmu.herokuapp.com']
 
 # Email setup settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
