@@ -116,7 +116,7 @@ SOCIAL_AUTH_PIPELINE = (
 )
 
 WSGI_APPLICATION = 'webapps.wsgi.application'
-ASGI_APPLICATION = 'webapps.routing.application'
+ASGI_APPLICATION = 'routing.application'
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
