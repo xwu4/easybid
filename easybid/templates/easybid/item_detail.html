@@ -117,12 +117,12 @@
                 </div>
                 {% if user.is_authenticated %}
                     {% if request.user == item.seller or item.is_expired %}
-                    <button type="submit" class="btn btn-lg btn-block btn-primary" disabled>Place Bid</button>
+                    <button type="submit" class="btn btn-lg btn-block btn-primary" id="bid_button" disabled>Place Bid</button>
                     {% else %}
                     <button type="submit" class="btn btn-lg btn-block btn-primary" id="bid_button">Place Bid</button>
                     {% endif %}
                 {% else %}
-                    <button type="submit" class="btn btn-lg btn-block btn-danger" disabled>Please login</button>
+                    <button type="submit" class="btn btn-lg btn-block btn-danger" id="bid_button" disabled>Please login</button>
                 {% endif %}
             </form>
         {% endif %}
