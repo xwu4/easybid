@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 import os
 from configparser import ConfigParser
-from whitenoise.django import DjangoWhiteNoise
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,9 +28,9 @@ CONFIG.read(os.path.join(BASE_DIR, "config.ini"))
 SECRET_KEY = CONFIG.get("Django", "Secret")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['easybid-cmu.herokuapp.com']
+ALLOWED_HOSTS = ['easybid-cmu.herokuapp.com', '127.0.0.1']
 
 # Email setup settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
