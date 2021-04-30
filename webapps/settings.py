@@ -31,7 +31,7 @@ SECRET_KEY = CONFIG.get("Django", "Secret")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['easybid-cmu.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['easybid-cmu.herokuapp.com', '127.0.0.1:8000']
 
 # Email setup settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -121,9 +121,19 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [os.environ.get('REDIS_URL', 'redis://redis:6379')],
+            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
         },
     },
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": os.environ.get('REDIS_URL', 'redis://localhost:6379'),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
 }
 
 
