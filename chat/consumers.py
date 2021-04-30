@@ -2,6 +2,11 @@ import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from easybid.views import bid_price_check
+import django
+import os
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "webapps.settings")
+django.setup()
 
 
 class ChatConsumer(WebsocketConsumer):
