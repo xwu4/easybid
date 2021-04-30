@@ -175,7 +175,8 @@
             document.querySelector('#highest_bid').innerHTML = Number(data.message).toFixed(2);
             var bidder = document.getElementById("highest_bidder");
             if(bidder) document.querySelector('#highest_bidder').innerHTML = data.username;
-            document.querySelector('#min_bid_price').innerHTML = (Number(data.message)+Number(min_bid_increment)).toFixed(2);
+            var min_bid_price = document.getElementById("min_bid_price");
+            if(min_bid_price) document.querySelector('#min_bid_price').innerHTML = (Number(data.message)+Number(min_bid_increment)).toFixed(2);
             document.querySelector('#bid_count').innerHTML = Number(document.querySelector('#bid_count').innerHTML)+Number(1);
         };
 
