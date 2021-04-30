@@ -26,7 +26,7 @@ import chat.routing
 #     ),
 # })
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'webapps.settings')
+os.environ['DJANGO_SETTINGS_MODULE'] = 'webapps.settings'
 import django
 django.setup()
 application = get_default_application()
