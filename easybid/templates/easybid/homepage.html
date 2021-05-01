@@ -21,7 +21,7 @@
       <div class="col-md-4">
         <div class="card mb-4 box-shadow">
           {%if item.product_image %}
-          <img class="card-img-top" src="{{item.product_image.url}}" alt="product image">
+          <img class="card-img-top" src="{{item.product_image.url}}" onerror="this.onerror=null; this.src='/static/easybid/default_img/default_item_img.png'" alt="product image">
           {% else %}
           <img class="card-img-top" src="/static/easybid/default_img/default_item_img.png" alt="product image">
           {% endif %}
