@@ -42,7 +42,7 @@
     <div class="col-md-6">
         <div class="product-img">
             {% if item.product_image %}
-                <img class="img-fluid" src="{% url 'product_image' item.id %}" id="product_image" alt="Product Image">
+                <img class="img-fluid" src="{% url 'product_image' item.id %}" onerror="this.onerror=null; this.src='/static/easybid/default_img/default_item_img.png'" id="product_image" alt="Product Image">
             {% else %}
                 <img class="img-fluid" src="/static/easybid/default_img/default_item_img.png" id="product_image" alt="Product Image">
             {% endif %}

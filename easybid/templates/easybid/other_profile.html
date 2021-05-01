@@ -12,7 +12,7 @@
                 <div class="col-md-4">
                     <div class="profile-img">
                         {% if profile_picture %}
-                        <img class="img-fluid" src="{% url 'profile_picture' owner.username %}" id="id_user_picture" alt="Profile Picture">  
+                        <img class="img-fluid" src="{% url 'profile_picture' owner.username %}" onerror="this.onerror=null; this.src='/static/easybid/default_img/default_user_img.png'" id="id_user_picture" alt="Profile Picture">  
                         {% else %}
                         <img class="img-fluid" src="/static/easybid/default_img/default_user_img.png" id="id_user_picture" alt="Profile Picture">
                         {% endif %}
@@ -50,7 +50,7 @@
                                 {% for auction in auction_items%}
                                     <div class="col-lg-4" style="margin-top: 1vh; text-align: center; font-size: 15px;">
                                         {% if auction.product_image %}
-                                        <img class="img-fluid" style = "border-radius: 1.5em; max-height: 15em; max-width: 15vw;" src="{{auction.product_image.url}}" alt="product_image" style="margin: auto;">
+                                        <img class="img-fluid" style = "border-radius: 1.5em; max-height: 15em; max-width: 15vw;" src="{{auction.product_image.url}}" onerror="this.onerror=null; this.src='/static/easybid/default_img/default_item_img.png'" alt="product_image" style="margin: auto;">
                                         {% else %}
                                         <img class="img-fluid" style = "border-radius: 1.5em; max-height: 15em; max-width: 15vw;" src="/static/easybid/default_img/default_item_img.png" alt="product_image" style="margin: auto;">
                                         {% endif %}

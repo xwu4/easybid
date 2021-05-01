@@ -9,7 +9,7 @@
         <div class="item-picture">
             <div class="col-auto d-none d-lg-block">
                 {% if item.product_image %}
-                <img src="{{item.product_image.url}}" alt="product image" style="width:100%">
+                <img src="{{item.product_image.url}}" onerror="this.onerror=null; this.src='/static/easybid/default_img/default_item_img.png'" alt="product image" style="width:100%">
                 {% else %}
                 <img src="/static/easybid/default_img/default_item_img.png" alt="product image" style="width:100%">
                 {% endif %}
