@@ -282,6 +282,11 @@ def bid_price_check(id, price):
     if item.is_expired == True:
         message = "Expired"
         return False, message
+
+    if item.is_started == False:
+        message = "Not started"
+        return False, message
+        
     if item.is_expired == False:
         if item.highest_bid is None:
             if item.starting_price > price:
@@ -301,7 +306,7 @@ def update_bid_price(request, id):
         context = get_user_info(request, context)
         item = get_object_or_404(AuctionItem, id=id)
 
-        if request.user == item.seller:
+        if request.user == item.seller or item.is_expired == True or item.is_started == False:
             return redirect(reverse('view_item_detail', kwargs={'id': id}))
 
         # Handle invalid bid price
@@ -368,7 +373,7 @@ def auction_item_edit(request, id):
             item = AuctionItem.objects.get(id=id)
             if item.is_started == True or item.is_expired == True:
                 return view_item_detail(request, id)
-                
+
             context = {}
             context = get_user_info(request, context)
             context["product_name"] = item.product_name
