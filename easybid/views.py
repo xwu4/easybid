@@ -366,6 +366,9 @@ def auction_item_edit(request, id):
     try:
         if request.method == "GET":
             item = AuctionItem.objects.get(id=id)
+            if item.is_started == True or item.is_expired == True:
+                return view_item_detail(request, id)
+                
             context = {}
             context = get_user_info(request, context)
             context["product_name"] = item.product_name
@@ -469,6 +472,9 @@ def auction_item_delete(request, id):
     if request.method == 'POST':
         print("this?")
         item = get_object_or_404(AuctionItem, id=id)
+        if item.is_started == True or item.is_expired == True:
+            return view_item_detail(request, id)
+
         if request.user == item.seller:
             print("here?")
             item.delete()
