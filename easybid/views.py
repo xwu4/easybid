@@ -446,7 +446,8 @@ def auction_item_edit(request, id):
             if auction_edited.start_time == now_withoutsecond:
                 auction_edited.start_time = now
             if auction_item_form.is_valid():
-                auction_edited.content_type = auction_item_form.cleaned_data['product_image'].content_type
+                if auction_item_form.cleaned_data['product_image'] != None:
+                    auction_edited.content_type = auction_item_form.cleaned_data['product_image'].content_type
             auction_edited.product_name = context["product_name"]
             auction_edited.product_description = context["product_description"]
             auction_edited.product_value = context["product_value"]
