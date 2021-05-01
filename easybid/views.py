@@ -492,4 +492,6 @@ def notify_winner(request, id):
 
 def paypal(request, id):
     context = {}
+    item = get_object_or_404(AuctionItem, id=id)
+    context['item'] = item
     return render(request, "easybid/paypal.html", context)
